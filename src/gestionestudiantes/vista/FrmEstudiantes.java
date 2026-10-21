@@ -14,10 +14,10 @@ import javax.swing.table.DefaultTableModel;
  * @author fsamaca
  */
 public class FrmEstudiantes extends javax.swing.JFrame {
-    
+
     private final EstudianteControlador controlador;
     private int idSeleccionado;
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmEstudiantes.class.getName());
 
     /**
@@ -79,16 +79,22 @@ public class FrmEstudiantes extends javax.swing.JFrame {
 
         lblSemestre.setText("Semestre:");
 
+        spnSemestre.setModel(new javax.swing.SpinnerNumberModel(1, 1, 10, 1));
+
         btnGuardar.setText("Guardar");
         btnGuardar.addActionListener(this::btnGuardarActionPerformed);
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(this::btnBuscarActionPerformed);
 
         btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(this::btnActualizarActionPerformed);
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(this::btnEliminarActionPerformed);
 
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(this::btnLimpiarActionPerformed);
 
         tblEstudiantes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -101,6 +107,11 @@ public class FrmEstudiantes extends javax.swing.JFrame {
 
             }
         ));
+        tblEstudiantes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblEstudiantesMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblEstudiantes);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -110,49 +121,44 @@ public class FrmEstudiantes extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 725, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(270, 270, 270)
+                        .addComponent(lblTitulo))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblCorreo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblApellido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblDocumento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblPrograma, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblSemestre, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblTitulo)
-                                .addGap(174, 174, 174))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(lblCorreo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(lblApellido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(lblNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(lblDocumento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(lblPrograma, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(lblSemestre, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(28, 28, 28)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(txtDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtPrograma, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(spnSemestre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btnGuardar)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(btnBuscar)
-                                        .addGap(31, 31, 31)
-                                        .addComponent(btnActualizar)
-                                        .addGap(33, 33, 33)
-                                        .addComponent(btnEliminar)))
-                                .addGap(18, 18, 18)))
-                        .addComponent(btnLimpiar)))
-                .addContainerGap(22, Short.MAX_VALUE))
+                            .addComponent(txtDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPrograma, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnSemestre, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnGuardar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnBuscar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnActualizar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEliminar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnLimpiar))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 725, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(lblTitulo)
-                .addGap(34, 34, 34)
+                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblDocumento)
                     .addComponent(txtDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -164,28 +170,28 @@ public class FrmEstudiantes extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblApellido)
                     .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCorreo))
-                .addGap(33, 33, 33)
+                    .addComponent(lblCorreo)
+                    .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPrograma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPrograma))
-                .addGap(21, 21, 21)
+                    .addComponent(lblPrograma)
+                    .addComponent(txtPrograma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSemestre)
                     .addComponent(spnSemestre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
                     .addComponent(btnBuscar)
                     .addComponent(btnActualizar)
                     .addComponent(btnEliminar)
                     .addComponent(btnLimpiar))
-                .addGap(29, 29, 29)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -210,10 +216,94 @@ public class FrmEstudiantes extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try{
+            // Buscamos el estudiante por el documento escrito
+            Estudiante estudiante = controlador.buscar(txtDocumento.getText());
+            if(estudiante == null){
+                JOptionPane.showMessageDialog(this, "No existe un estudiante con ese documento");
+                return;
+            }
+            // Mostramos sus datos en el formulario
+            mostrarEstudianteFormulario(estudiante);
+            // Seleccionamos su fila en la tabla
+            seleccionarFilaPorId(estudiante.getId());
+        }catch(IllegalArgumentException e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Validación", JOptionPane.WARNING_MESSAGE);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(this,"Error de base de datos" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        try{
+            // Obtenemos los datos modificados (incluye el id seleccionado)
+            Estudiante estudiante = obtenerEstudianteFormulario();
+            boolean actualizado = controlador.actualizar(estudiante);
+            if(actualizado){
+                JOptionPane.showMessageDialog(this, "Estudiante actualizado correctamente");
+                limpiarFormulario();
+                cargarTabla();
+            }
+        }catch(IllegalArgumentException e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Validación", JOptionPane.WARNING_MESSAGE);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(this,"Error de base de datos" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        if(idSeleccionado <= 0){
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un estudiante", "Validación", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        // Pedimos confirmación antes de eliminar
+        int respuesta = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro de eliminar al estudiante seleccionado?",
+                "Confirmar", JOptionPane.YES_NO_OPTION);
+        if(respuesta != JOptionPane.YES_OPTION){
+            return;
+        }
+        try{
+            boolean eliminado = controlador.eliminar(idSeleccionado);
+            if(eliminado){
+                JOptionPane.showMessageDialog(this, "Estudiante eliminado correctamente");
+                limpiarFormulario();
+                cargarTabla();
+            }
+        }catch(IllegalArgumentException e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Validación", JOptionPane.WARNING_MESSAGE);
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(this,"Error de base de datos" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        limpiarFormulario();
+        tblEstudiantes.clearSelection();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void tblEstudiantesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEstudiantesMouseClicked
+        // Al hacer clic en una fila cargamos sus datos en el formulario
+        int fila = tblEstudiantes.getSelectedRow();
+        if(fila < 0){
+            return;
+        }
+        Estudiante estudiante = new Estudiante();
+        estudiante.setId((Integer) tblEstudiantes.getValueAt(fila, 0));
+        estudiante.setDocumento((String) tblEstudiantes.getValueAt(fila, 1));
+        estudiante.setNombre((String) tblEstudiantes.getValueAt(fila, 2));
+        estudiante.setApellido((String) tblEstudiantes.getValueAt(fila, 3));
+        estudiante.setCorreo((String) tblEstudiantes.getValueAt(fila, 4));
+        estudiante.setPrograma((String) tblEstudiantes.getValueAt(fila, 5));
+        estudiante.setSemestre((Integer) tblEstudiantes.getValueAt(fila, 6));
+        mostrarEstudianteFormulario(estudiante);
+    }//GEN-LAST:event_tblEstudiantesMouseClicked
+
     /**
      * @param args the command line arguments
      */
-    
+
     // Creamos un método para convertir la información de la pantalla
     // en un objeto de tipo estudiante.
     private Estudiante obtenerEstudianteFormulario(){
@@ -228,10 +318,32 @@ public class FrmEstudiantes extends javax.swing.JFrame {
         estudiante.setCorreo(txtCorreo.getText().trim());
         estudiante.setPrograma(txtPrograma.getText().trim());
         estudiante.setSemestre((Integer) spnSemestre.getValue());
-        
+
         return estudiante;
     }
-    
+
+    // Mostramos en pantalla los datos de un estudiante y guardamos su id
+    private void mostrarEstudianteFormulario(Estudiante estudiante){
+        idSeleccionado = estudiante.getId();
+        txtDocumento.setText(estudiante.getDocumento());
+        txtNombre.setText(estudiante.getNombre());
+        txtApellido.setText(estudiante.getApellido());
+        txtCorreo.setText(estudiante.getCorreo());
+        txtPrograma.setText(estudiante.getPrograma());
+        spnSemestre.setValue(estudiante.getSemestre());
+    }
+
+    // Buscamos en la tabla la fila que tiene el id indicado y la seleccionamos
+    private void seleccionarFilaPorId(int id){
+        for(int fila = 0; fila < tblEstudiantes.getRowCount(); fila++){
+            if((Integer) tblEstudiantes.getValueAt(fila, 0) == id){
+                tblEstudiantes.setRowSelectionInterval(fila, fila);
+                tblEstudiantes.scrollRectToVisible(tblEstudiantes.getCellRect(fila, 0, true));
+                return;
+            }
+        }
+    }
+
     private void limpiarFormulario(){
         idSeleccionado = 0;
         txtDocumento.setText("");
@@ -242,9 +354,15 @@ public class FrmEstudiantes extends javax.swing.JFrame {
         spnSemestre.setValue(1);
         txtDocumento.requestFocus();
     }
-    
+
     private void cargarTabla(){
-        DefaultTableModel modelo = new DefaultTableModel();
+        // Creamos un modelo de solo lectura para que la tabla no se edite a mano
+        DefaultTableModel modelo = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int fila, int columna){
+                return false;
+            }
+        };
         modelo.addColumn("ID");
         modelo.addColumn("Documento");
         modelo.addColumn("Nombre");
@@ -252,7 +370,7 @@ public class FrmEstudiantes extends javax.swing.JFrame {
         modelo.addColumn("Correo");
         modelo.addColumn("Programa");
         modelo.addColumn("Semestre");
-        
+
         try{
             for(Estudiante estudiante : controlador.listar()){
                 // Creamos un arreglo que representará una fila
@@ -268,19 +386,19 @@ public class FrmEstudiantes extends javax.swing.JFrame {
                 //Agregar fila al modelo
                 modelo.addRow(fila);
             }
-            
+
             //Asociamos nuestro modelo al Jtable
             tblEstudiantes.setModel(modelo);
         }catch(SQLException e){
             JOptionPane.showMessageDialog(this, "Error cargado estudiantes" + e.getMessage());
         }
     }
-    
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -304,7 +422,6 @@ public class FrmEstudiantes extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnLimpiar;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblApellido;
     private javax.swing.JLabel lblCorreo;

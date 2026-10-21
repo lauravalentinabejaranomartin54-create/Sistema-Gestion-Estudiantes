@@ -106,8 +106,8 @@ public class EstudianteDAOImpl implements EstudianteDAO {
     @Override
     public boolean actualizar(Estudiante estudiante) throws SQLException {
         String sql = "UPDATE estudiantes "
-                + "SET docuento = ?, "
-                + "nombre = ?, apellido = ?, correo = ?, programa = ?"
+                + "SET documento = ?, "
+                + "nombre = ?, apellido = ?, correo = ?, programa = ?, "
                 + "semestre = ? WHERE id = ?";
 
         // Abrimos nuestros recursos JDBC
